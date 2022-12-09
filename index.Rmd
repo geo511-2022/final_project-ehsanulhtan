@@ -1,20 +1,15 @@
 ---
-title: "My Final Project Template"
-author: Your name here
-subtitle: Subtitle here if desired
+title: "PFAS Contamination Level in USA"
+author: Ehsan Ul Hoque Tanim
 ---
 
 # Introduction
 
-[~ 200 words]
-
-Clearly stated background and questions / hypotheses / problems being addressed. Sets up the analysis in an interesting and compelling way.
+PFAS- per and poly-fluoroalkyl substances are one of the most concerned contaminants. According to EPA, PFAS are widely used long lasting chemicals with a slower decay rate. PFAS were developed in around 1940 to use them in everyday products including cookware’s, clothes etc. It has been an excellent invention till we had no idea of its effects on human health. Dupont patented Teflon for the industrial use in 1946, which contained thousands of PFAS. Awareness against this chemical started to grow during late 1990’s when a lawyer sued the Dupont for dumping over thousands of tons chemical in West Virginia near a farmland. The lawsuit continued for more than 20 years and they settled it for a large amount of money. This lawsuit has brought upon the detrimental facts of PFAS. In USA almost 90% people are already carrying PFAS in their blood, which is an alarming factor.
 
 # Materials and methods
 
-[~ 200 words]
-
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+PFAS acts like a slow poison. Due to the persistence of these chemicals, long term existence in human cells is possible. Still people are not aware of this.  In this study I will use US MAP data and PFAS contamination dataset from EPA. I will use Rstudio to write the code.
 
 Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
 
