@@ -38,7 +38,7 @@ To represent a graphical variation of contamination and their effects in differe
 
 
 
-##CODE
+## CODE
 
 Loaded required packages in a code chunk (All packages are subjected to prior installation):
 
