@@ -1,6 +1,6 @@
 ---
 title: "PFAS Contamination Level in Counties, USA"
-author: Ehsan Ul Hoque Tanim
+author: "Ehsan Ul Hoque Tanim"
 ---
 
 # Introduction
