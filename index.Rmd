@@ -1,105 +1,106 @@
 ---
-title: "My Final Project Template"
-author: Your name here
-subtitle: Subtitle here if desired
+title: "PFAS Contamination Level in Counties, USA"
+author: "Ehsan Ul Hoque Tanim"
 ---
 
 # Introduction
 
-[~ 200 words]
-
-Clearly stated background and questions / hypotheses / problems being addressed. Sets up the analysis in an interesting and compelling way.
+PFAS- per and poly-fluoroalkyl substances are one of the most concerned contaminants. According to EPA, PFAS are widely used long lasting chemicals with a slower decay rate. PFAS were developed in around 1940 to use them in everyday products including cookware’s, clothes etc. It has been an excellent invention till we had no idea of its effects on human health. Dupont patented Teflon for the industrial use in 1946, which contained thousands of PFAS. Awareness against this chemical started to grow during late 1990’s when a lawyer sued the Dupont for dumping over thousands of tons chemical in West Virginia near a farmland. The lawsuit continued for more than 20 years and they settled it for a large amount of money. This lawsuit has brought upon the detrimental facts of PFAS. In USA almost 90% people are already carrying PFAS in their blood, which is an alarming factor.
 
 # Materials and methods
 
-[~ 200 words]
-
-Narrative: Clear narrative description of the data sources and methods. Includes data from at least two sources that were integrated / merged in R.
+PFAS acts like a slow poison. Due to the persistence of these chemicals, long term existence in human cells is possible. Still people are not aware of this.  In this study I will use US MAP data and PFAS contamination dataset from EPA. I will use Rstudio to write the code.
 
 Code: The code associated with the project is well organized and easy to follow. Demonstrates mastery of R graphics and functions.
 
-Data: The underlying data are publicly accessible via the web and downloaded/accessed within the Rmd script. If you want to use your own data, you must make it available on a website (e.g. Figshare) so that others are able to re-run your code.
+Data: [Datasource](https://echo.epa.gov/system/files/Drinking_Water_Testing_Data_State_01-03-2022_0.xlsx)
 
-You can do bullets like this:
+A number of states and individual public water systems have been testing source water and finished water for PFAS, but these records are not maintained by EPA in a national repository. EPA has provided states that are regulating and/or testing PFAS with a mechanism to store/report PFAS data that is associated with state-specific PFAS regulations.
 
-* The first most important thing
-* The second most important thing
-* The third most important thing
+## Methodology
 
-You can do numbers like this:
+Here are few packages enlisted which I am planning to use to plot the map. Such as I will use dplyr for joining data sets, leaflet for the base map. 
 
-1. The first most important thing
-2. The second most important thing
-3. The third most important thing
+library(tidyverse) 
 
-See [http://rmarkdown.rstudio.com/](http://rmarkdown.rstudio.com/) for all the amazing things you can do.
+library(ggplot2)
+
+library(dplyr)
+
+library(stringr)
 
 
-Here's my first code chunk.
-```{r}
-1+2
-```
 
-Load any required packages in a code chunk (you may need to install some packages):
+## Expected results
+To represent a graphical variation of contamination and their effects in different states of the US.
+![](https://i0.wp.com/pfasproject.com/wp-content/uploads/2020/04/Joint_EWG_SSEHRI_map1-1.png?resize=816%2C9999&ssl=1)
+
+
+
+
+## CODE
+
+Loaded required packages in a code chunk (All packages are subjected to prior installation):
 
 ```{r, message=F, warning=F}
-library(tidyverse)
-library(leaflet)
-library(kableExtra)
-knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
+library(tidyverse) 
+library(ggplot2)
+library(dplyr)
+library(stringr)
+library(mapproj)
 ```
 
-## Download and clean all required data
+## Data Preparation
 ```{r}
-n=20
-data=data.frame(x=runif(n,-180,180),
-                y=runif(n,-60,60),
-                size = runif(n, 5, 20),
-                category = factor(
-                  sample(letters[1:5], n, replace = TRUE)
-                  ),
-                value = rnorm(n))
-```
+us_states <- map_data("state")
+us_counties <- map_data("county")
+head(us_states)
 
-```{r, results='asis'}
-data %>% 
-  slice(1:10) %>% #show only 1:n rows
-  kable(digits=2,align="c")%>% #make table and round to two digits
-  kable_styling(bootstrap_options = 
-                  c("striped", "hover", "condensed", "responsive")) #apply other formatting
-```
 
-Add any additional processing steps here.
+project_data <- "Data/Drinking_Water_Testing_Data_PFAS Map.csv"
+csv_data <- read.csv(project_data) 
+csv_data [c("county","abbr")] <- str_split_fixed(csv_data$County, ",", 2)
+csv_data$county <- tolower(csv_data$county)
+
+
+pfas_county <- csv_data %>% 
+  filter(Concentration >=0) %>%
+  group_by(county) %>%
+  summarize(pfas_min= min(Concentration,na.rm=TRUE)) %>%
+  filter(pfas_min != "ND")
+```
 
 # Results
 
-[~200 words]
+This map represents minimum contamination level found in public water systems situated in counties. Grey zones represents places where data was noot available for PFAs. It doesn't ensure that grey zone is safe from PFAS. 
 
-Tables and figures (maps and other graphics) are carefully planned to convey the results of your analysis. Intense exploration and evidence of many trials and failures. The author looked at the data in many different ways before coming to the final presentation of the data.
-
-Show tables, plots, etc. and describe them.
-
-```{r, fig.width=6, fig.height=3, fig.cap="Map of completely random data"}
-m <- leaflet(data) %>% 
-  addTiles() %>% 
-  addCircleMarkers(~x, ~y, radius = ~size,color = ~as.factor(category)) %>% 
-  addPopups(~x[2], ~y[2], "Random popup")
-m  # a map with the default OSM tile layer
+```{r, fig.width=6, fig.height=3, fig.cap="PFAS Contamination in Counties USA"}
+us_counties %>% 
+  left_join(pfas_county, by=c("subregion"="county")) %>% 
+  ggplot(aes(x=long,y=lat,group=group, fill=pfas_min)) +
+  geom_polygon(color = "grey90", size = 0.1) +
+  coord_map(projection = "albers", lat0 = 45, lat1 = 55) +
+  scale_fill_discrete(guide = "none")+
+  theme(legend.position="bottom",
+        axis.line=element_blank(),
+        axis.text=element_blank(),
+        axis.ticks=element_blank(),
+        axis.title=element_blank(),
+        panel.background=element_blank(),
+        panel.border=element_blank(),
+        panel.grid=element_blank())
 ```
 
-
-```{r}
-data %>% 
-  ggplot(aes(x=x,y=y,col=category))+
-  geom_point()
-```
 
 # Conclusions
 
-[~200 words]
-
-Clear summary adequately describing the results and putting them in context. Discussion of further questions and ways to continue investigation.
+To understand the true risk factors of PFAS we have to make people aware about PFAS. This map would be the first step to make people aware about their neighborhood. 
 
 # References
 
-All sources are cited in a consistent manner
+Following resources have been used for data collection and project purposes.
+
+[1]https://echo.epa.gov/system/files/Drinking_Water_Testing_Data_State_01-03-2022_0.xlsx
+[2]https://www.geeksforgeeks.org/how-to-create-state-and-county-maps-easily-in-r/
+
+
