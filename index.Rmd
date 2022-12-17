@@ -21,7 +21,7 @@ A number of states and individual public water systems have been testing source 
 
 Here are few packages enlisted which I am planning to use to plot the map. Such as I will use dplyr for joining data sets, leaflet for the base map. 
 
-library(tidyverse) 
+library(tidyverse)  Im not sure you need to list this library twice.
 
 library(ggplot2)
 
@@ -56,7 +56,7 @@ us_counties <- map_data("county")
 head(us_states)
 
 
-project_data <- "Data/Drinking_Water_Testing_Data_PFAS Map.csv"
+project_data <- "E:/GEO511/final_project-ehsanulhtan/Data/Drinking_Water_Testing_Data_PFAS Map.csv" Code is based on specific file path maybe edit to make it mroe general use? 
 csv_data <- read.csv(project_data) 
 csv_data [c("county","abbr")] <- str_split_fixed(csv_data$County, ",", 2)
 csv_data$county <- tolower(csv_data$county)
