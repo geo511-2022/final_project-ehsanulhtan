@@ -47,8 +47,6 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(stringr)
-library(kableExtra)
-knitr::opts_chunk$set(cache=TRUE)  # cache the results for quick compiling
 ```
 
 ## Data Preparation
